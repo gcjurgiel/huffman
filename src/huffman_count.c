@@ -30,15 +30,6 @@ struct huffman_count_list* huffman_count_list_alloc(struct huffman_count count) 
   return list;
 }
 
-// Free the list
-void huffman_count_list_free_all(struct huffman_count_list* list) {
-  // Recursivly remove elements
-  if (list) {
-    huffman_count_list_free_all(list->next);
-    free(list);
-  }
-}
-
 // inster element in list below
 struct huffman_count_list* huffman_count_list_insert(struct huffman_count_list* below, struct huffman_count count) {
   // new entry object
@@ -57,9 +48,9 @@ struct huffman_count_list* huffman_count_list_build(struct huffman_count* counts
   // Allocate space
   if (num < 1) { return NULL; }
   struct huffman_count_list* head = huffman_count_list_head();
-  struct huffman_count_list* prev = head;
 
   // Interativly add to list
+  struct huffman_count_list* prev = head;
   for (int i = 0; i < num; i++) {
     if (counts[i].count == 0) { continue; }
     prev = huffman_count_list_insert(prev, counts[i]);
@@ -103,7 +94,7 @@ struct huffman_node* huffman_tree_from_counts(struct huffman_count* counts, size
   huffman_count_sort(counts, 0, num - 1);
   struct huffman_count_list* list_head = huffman_count_list_build(counts, num);
  
-  while (list_head->next->next) {
+  while (list_head->next && list_head->next->next) {
     // Combine top two element into tree
     struct huffman_count_list* zero = list_head->next;
     struct huffman_count_list* one = list_head->next->next;
@@ -112,9 +103,9 @@ struct huffman_node* huffman_tree_from_counts(struct huffman_count* counts, size
                                       zero->count.count + one->count.count};
 
     // Free top two list entries and remove them from the list
+    list_head->next = list_head->next->next->next;
     free(zero);
     free(one);
-    list_head->next = list_head->next->next->next;
     
     // Insert newly creted tree back into the sorted list
     struct huffman_count_list* prev = list_head;
@@ -126,9 +117,12 @@ struct huffman_node* huffman_tree_from_counts(struct huffman_count* counts, size
       prev = prev->next;
     }
   }
+  
+  if(!list_head->next) { return NULL; }
 
   // Return the final tree
   struct huffman_node* final_node = list_head->next->count.node;
-  huffman_count_list_free_all(list_head);
+  free(list_head->next);
+  free(list_head);
   return final_node;
 }

@@ -36,9 +36,11 @@ struct huffman_node* huffman_node_alloc(struct huffman_node* zeroLeaf,
 }
 
 void huffman_node_free(struct huffman_node* node) {
+  if (!node) { return; }
+
   // Recursivly free child nodes.
-  if (node->zeroLeaf) { free(node->zeroLeaf); }
-  if (node->oneLeaf) { free(node->oneLeaf); }
+  if (node->zeroLeaf) { huffman_node_free(node->zeroLeaf); }
+  if (node->oneLeaf) { huffman_node_free(node->oneLeaf); }
 
   // Free strings.
   huffman_string_free(node->zeroChars);

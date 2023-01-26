@@ -14,6 +14,8 @@ struct huffman_node* huffman_node_alloc(struct huffman_node* zeroLeaf,
     node->zeroChars = huffman_string_concat(zeroLeaf->zeroChars, zeroLeaf->oneChars);
   } else {
     node->zeroLeaf = NULL;
+
+    // Place value on zero side chars for proper building
     node->zeroChars = huffman_string_alloc(1);
     huffman_string_push_back(node->zeroChars, value);
   }
@@ -80,12 +82,4 @@ void huffman_node_write(struct huffman_node* tree, FILE* file) {
   // write the null character to signify a null (ending) node
   putc(0, file);
   return;
-}
-
-void huffman_node_encoder(FILE* input, FILE* output, struct huffman_node* tree) {
-  
-}
-
-void huffman_node_decode(FILE* input, FILE* output, struct huffman_node* tree) {
-
 }

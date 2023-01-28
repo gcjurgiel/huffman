@@ -44,7 +44,7 @@ $ make
  programming, how to build this project, or how to run it, this won't mean 
  much to you, and quite frankly it isn't all that exciting to anyone but me. 
  For some reference, I took pains to make this program as efficent as possible,
- writting it in pure ANSI C without the help of any external libraries. It  
+ writting it in pure ANSI C without the help of any external libraries. It 
  took not insignificant effort with much complexity underneath despite the 
  seemingly simple result. With that being said, there remain sever known breaking
  flaws and obvious features that remain unaddressed due to time constraints. 
